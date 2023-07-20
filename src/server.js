@@ -1,6 +1,7 @@
 import http from 'http'
 import { Readable } from 'stream'
 import { randomUUID } from 'crypto'
+import { createReadStream } from 'node:fs'
 
 function * run() {
     for (let index = 0; index < 1121; index++)     {
@@ -14,22 +15,11 @@ function * run() {
 };
 
 function handler(_request, response) {
-    const readable = new Readable({
-        read() {
+    console.log("[REQUEST]")
+    const file = createReadStream('src/database.csv')
 
-            for (const data of run()) {
-                console.log('Sending...', JSON.stringify(data))
-                this.push(JSON.stringify(data) + '\n');
-            };
-
-
-            // Para informar que os dados acabaram:
-            this.push(null);
-        }
-    });
-
-    // Cada pipe envia chunks para o response (Writable Stream)
-    readable.pipe(response);
+    file.pipe(response)
+   
 };
 
 http.createServer(handler)
