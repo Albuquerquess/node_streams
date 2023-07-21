@@ -15,10 +15,19 @@ function * run() {
 };
 
 function handler(_request, response) {
+
+    response.setHeader('Access-Control-Allow-Origin', '*');
+    response.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+    response.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    response.setHeader('Access-Control-Allow-Credentials', true);
     console.log("[REQUEST]")
     const file = createReadStream('src/database.csv')
 
     file.pipe(response)
+
+    file.on('data', (data) => {
+        console.log(data.toString())
+    })
    
 };
 
